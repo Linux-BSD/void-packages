@@ -1,0 +1,12 @@
+# Template file for 'gnubee-pc1-base'
+pkgname=gnubee-pc1-base
+version=20190928
+revision=1
+build_style=meta
+homepage="http://www.voidlinux.eu"
+short_desc="Void Linux Gnubee PC1 platform package"
+maintainer="Linux-BSD <sec.research.2005@gmail.com>"
+license="Public Domain"
+
+arches="mipsel*"
+depends="virtual?ntp-daemon lvm2 cryptsetup keyutils wget curl ntfs-3g nfs-utils rsync dropbear busybox socklog socklog-void chrony ncurses-term"

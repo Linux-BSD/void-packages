@@ -1,0 +1,15 @@
+enableService() {
+  local service=${1:-dummy}
+  [[ -L "etc/runit/runsvdir/default/${service}" ]] || \
+    ln -s /etc/sv/${service} etc/runit/runsvdir/default/
+}
+
+case "$ACTION" in
+post)
+	mkdir -p etc/runit/runsvdir/default/
+	enableService sshd
+	enableService ntpd
+	enableService dhcpcd
+  enableService agetty-ttyS0
+	;;
+esac
