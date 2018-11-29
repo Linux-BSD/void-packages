@@ -1,0 +1,28 @@
+# Template file for 'system76-power'
+pkgname=system76-power
+version=1.0.0
+revision=1
+
+only_for_archs="i686 i686-musl x86_64 x86_64-musl"
+
+short_desc="System76 Power Management"
+license="GPL-3.0-or-later"
+maintainer="Linux-BSD <sec.research.2005@gmail.com>"
+homepage="https://github.com/pop-os/system76-power"
+
+depends="dbus"
+hostmakedepends="git rust cargo dbus-devel dbus dbus-libs pkg-config"
+build_style="gnu-makefile"
+
+do_fetch() {
+	git clone https://github.com/pop-os/system76-power ${pkgname}-${version}
+	cd ${pkgname}-${version}
+}
+
+pre_build() {
+  make update
+}
+
+post_install() {
+	vsv $pkgname
+}

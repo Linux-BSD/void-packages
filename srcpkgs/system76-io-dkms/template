@@ -1,0 +1,33 @@
+# Template file for 'system76-io-dkms'
+pkgname=system76-io-dkms
+version=0.0.1
+revision=1
+
+only_for_archs="i686 i686-musl x86_64 x86_64-musl"
+
+short_desc="System76 Io DKMS driver. This DKMS driver controls System76 Io devices"
+license="GPL-3.0-or-later"
+maintainer="Linux-BSD <sec.research.2005@gmail.com>"
+homepage="https://github.com/pop-os/system76-io-dkms"
+
+dkms_modules="system76_io ${version}"
+depends="dkms"
+hostmakedepends="git"
+
+do_fetch() {
+	git clone https://github.com/pop-os/system76-io-dkms ${pkgname}-${version}
+	cd ${pkgname}-${version}
+}
+
+do_install() {
+	vmkdir usr/src/system76-io-${version}
+	vcopy "*.c" usr/src/system76-io-${version}
+	vcopy Makefile usr/src/system76-io-${version}
+	vcopy debian/system76-io-dkms.dkms usr/src/system76-io-${version}/dkms.conf
+	sed -i -e "s/@VERSION@/${version}/" ${PKGDESTDIR}/usr/src/system76-io-${version}/dkms.conf
+
+	# modules-load.d(5) file.
+	vmkdir usr/lib/modules-load.d
+	echo "system76_io" > ${DESTDIR}/usr/lib/modules-load.d/system76-io.conf
+	chmod 644 ${DESTDIR}/usr/lib/modules-load.d/system76-io.conf
+}

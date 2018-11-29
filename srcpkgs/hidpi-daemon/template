@@ -1,0 +1,28 @@
+# Template file for 'system76-hidpi-daemon'
+pkgname=hidpi-daemon
+version=18.04.4
+revision=1
+wrksrc=hidpi-daemon-${version}
+only_for_archs="i686 i686-musl x86_64 x86_64-musl"
+short_desc="Daemon to manage HiDPI and LoDPI monitors on X for System76 machines."
+maintainer="Linux-BSD <sec.research.2005@gmail.com>"
+license="GPL-3.0-or-later"
+homepage="https://github.com/pop-os/hidip-daemon"
+distfiles="https://github.com/pop-os/${pkgname}/archive/${version}.tar.gz"
+checksum=d41839faee4b73e36a1d130527b744cb5fbfaf167d9b642477a8a91cbbc053a6
+hostmakedepends="dbus dbus-libs python3-pyflakes python3-dbus python3-gobject libgirepository libgirepository-devel python3-xlib"
+depends="dbus python3-dbus python3-gobject libgirepository"
+build_style=python3-module
+tags="python3"
+
+post_install() {
+  vmkdir /usr/lib/hidpi-daemon
+  vcopy hidpi-daemon usr/lib/hidpi-daemon
+  vcopy hidpi-notification usr/lib/hidpi-daemon
+  vcopy prime-dialog usr/lib/hidpi-daemon
+  vmkdir /usr/share/glib-2.0/schemas/
+  vcopy com.system76.hidpi.gschema.xml /usr/share/glib-2.0/schemas/
+  vmkdir /etc/xdg/autostart
+  vcopy hidpi-daemon.desktop /etc/xdg/autostart/
+  vcopy hidpi-frontend.desktop /etc/xdg/autostart/
+}

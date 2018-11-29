@@ -1,0 +1,2 @@
+#!/bin/sh
+exec svlogd -tt /var/log/system76-firmware-daemon

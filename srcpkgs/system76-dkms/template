@@ -1,0 +1,31 @@
+# Template file for 'system76-dkms'
+pkgname=system76-dkms
+version=1.0.0
+revision=1
+wrksrc=system76-dkms-${version}
+
+#only_for_archs="x86_64 x86_64-musl"
+only_for_archs="i686 i686-musl x86_64 x86_64-musl"
+
+short_desc="System76 DKMS driver. This DKMS driver provides airplane mode, keyboard backlight, and fan support for System76 laptops"
+maintainer="Linux-BSD <sec.research.2005@gmail.com>"
+license="GPL-3.0-or-later"
+homepage="https://github.com/pop-os/system76-dkms"
+distfiles="https://github.com/pop-os/system76-dkms/archive/${version}.tar.gz"
+checksum=eea797f32c639c759ae2aba0d7a06fef970a024d52f7878954e0f1084e7ded39
+
+dkms_modules="system76 ${version}"
+depends="dkms"
+
+do_install() {
+	vmkdir usr/src/system76-${version}
+	vcopy "*.c" usr/src/system76-${version}
+	vcopy Makefile usr/src/system76-${version}
+	vcopy debian/system76-dkms.dkms usr/src/system76-${version}/dkms.conf
+	sed -i -e "s/@VERSION@/${version}/" ${PKGDESTDIR}/usr/src/system76-${version}/dkms.conf
+
+	# modules-load.d(5) file.
+	vmkdir usr/lib/modules-load.d
+	echo "system76" > ${DESTDIR}/usr/lib/modules-load.d/system76.conf
+	chmod 644 ${DESTDIR}/usr/lib/modules-load.d/system76.conf
+}

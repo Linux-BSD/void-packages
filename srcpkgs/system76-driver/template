@@ -1,0 +1,34 @@
+# Template file for 'system76-driver'
+pkgname=system76-driver
+version=3.9.6
+revision=1
+
+only_for_archs="i686 i686-musl x86_64 x86_64-musl"
+
+short_desc="Universal driver for System76 computers"
+maintainer="Linux-BSD <sec.research.2005@gmail.com>"
+license="GPL-2.0-or-later"
+homepage="https://launchpad.net/system76-driver"
+
+depends="dbus python3-dbus python3-pyflakes python3-evdev python3-gobject libgirepository xbacklight"
+hostmakedepends="git dbus dbus-libs python3-pyflakes python3-dbus python3-evdev python3-gobject xbacklight libgirepository libgirepository-devel"
+build_style="python3-module"
+tags="python3"
+
+do_fetch() {
+	git clone https://github.com/pop-os/system76-driver ${pkgname}-${version}
+	cd ${pkgname}-${version}
+}
+
+post_install() {
+  vbin system76-driver-pkexec
+  vbin system76-firmware
+  vbin system76-firmware-pkexec
+  vmkdir /usr/share/polkit-1/actions
+  vcopy com.system76.pkexec.system76-driver.policy /usr/share/polkit-1/actions
+  vcopy com.system76.pkexec.system76-firmware.policy /usr/share/polkit-1/actions
+  vmkdir /usr/lib/${pkgname}
+  vcopy system76-firmware-dialog /usr/lib/${pkgname}
+  vcopy system76-daemon /usr/lib/${pkgname}
+  vcopy system76-backlight-daemon /usr/lib/${pkgname}
+}
