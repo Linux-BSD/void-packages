@@ -1,7 +1,8 @@
 # Template file for 'system76-firmware'
 pkgname=system76-firmware
 version=1.0.3
-revision=1
+revision=1 #TODO Change me
+_git_commit=33fe4329b2977a78f249bd205735bc0583b2f8eb #TODO Change me
 
 only_for_archs="i686 i686-musl x86_64 x86_64-musl"
 
@@ -11,16 +12,18 @@ maintainer="Linux-BSD <sec.research.2005@gmail.com>"
 homepage="https://github.com/pop-os/system76-firmware"
 
 depends="dbus"
-hostmakedepends="git rust cargo liblzma-devel libsodium-devel libressl-devel dbus-devel dbus dbus-libs pkg-config"
+hostmakedepends="rust cargo liblzma-devel libsodium-devel libressl-devel dbus-devel dbus dbus-libs pkg-config"
 build_style="gnu-makefile"
+distfiles="${homepage}/archive/${_git_commit}.tar.gz>${pkgname}-${version}.tar.gz"
+checksum=6ca2d3ec2c905ef33b4f977f853ba976bf9551fd10d9823c7dadbb2b7358f8ac #TODO Change me
 
-do_fetch() {
-	git clone https://github.com/pop-os/system76-firmware ${pkgname}-${version}
-	cd ${pkgname}-${version}
+post_extract() {
+  mv ${XBPS_BUILDDIR}/${pkgname}-${_git_commit} ${XBPS_BUILDDIR}/${pkgname}-${version}
 }
 
 pre_build() {
-  make update
+  make clean
+  make distclean
 }
 
 post_install() {
