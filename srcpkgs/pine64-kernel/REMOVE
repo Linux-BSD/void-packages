@@ -1,0 +1,2 @@
+rm -f /boot/initramfs-linux.img
+rm -f /boot/initramfs-linux-fallback.img

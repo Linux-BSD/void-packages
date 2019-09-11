@@ -1,0 +1,21 @@
+# Template file for 'armbian-firmware'
+pkgname=armbian-firmware
+version=20190223
+revision=1
+
+short_desc="Firmware files from the Armbian Project"
+maintainer="Linux-BSD <sec.research.2005@gmail.com>"
+license="Custom"
+_commit="fe584970a1f8e718540a3cec4838e7a4cad5f263"
+homepage="https://github.com/armbian/firmware"
+distfiles="${homepage}/archive/${_commit}.tar.gz"
+checksum=1d1036af538ea60ec9b73ffb29e31edd88309b3ab83ec2ded2c328895a0eb648
+
+wrksrc="firmware-${_commit}"
+archs="noarch"
+
+do_install() {
+	vmkdir usr/lib/firmware
+  vcopy * usr/lib/firmware
+  rm ${DESTDIR}/usr/lib/firmware/README.md
+}

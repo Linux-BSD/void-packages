@@ -1,0 +1,24 @@
+# Template file for 'pine64-rtl8723bt-firmware'
+pkgname=pine64-rtl8723bt-firmware
+version=20190223
+revision=1
+_commit="28ad3584927c0fe1f321176f73a7fd42cccec56f"
+
+short_desc="Firmware files for RTL8723BS and RTL8723CS"
+maintainer="Linux-BSD <sec.research.2005@gmail.com>"
+license="Custom:Realtek"
+homepage="https://github.com/anarsoul/rtl8723bt-firmware"
+distfiles="${homepage}/archive/${_commit}.tar.gz"
+checksum=6bddc863eb3fe388d06b3a7db149e777d2573755291665ac18b0481aed368d0c
+
+wrksrc="rtl8723bt-firmware-${_commit}"
+archs="noarch"
+build_style=gnu-makefile
+
+do_install() {
+	vmkdir usr/lib/firmware
+  make DESTDIR=${DESTDIR} FIRMWAREDIR=/usr/lib/firmware install
+  rm ${DESTDIR}/usr/lib/firmware/Makefile
+	vlicense LICENCE.rtlwifi_firmware.txt
+	vlicense WHENCE
+}

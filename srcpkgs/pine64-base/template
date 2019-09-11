@@ -1,0 +1,13 @@
+# Template file for 'pine64-base'
+pkgname=pine64-base
+version=20190902
+revision=1
+build_style=meta
+homepage="http://www.voidlinux.eu"
+short_desc="Void Linux platform package for Pine64 boards"
+maintainer="Linux-BSD <sec.research.2005@gmail.com>"
+license="Public Domain"
+
+archs="aarch64 aarch64-musl"
+makedepends="base-system"
+depends="virtual?ntp-daemon pine64-kernel pine64-uboot pine64-rtl8723bt-firmware linux-firmware-network"

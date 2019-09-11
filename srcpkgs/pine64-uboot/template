@@ -1,0 +1,88 @@
+# Template file for 'pine64-uboot'
+pkgname=pine64-uboot
+version=2019.07
+#_atf_commit="19b56cf4a2251e5ffcab41cdd6dd8449f8b1402a"
+_atf_version="2.1"
+#_uboot_version=${version/.rc1/-rc1}
+_uboot_version=${version}
+revision=1
+create_wrksrc=yes
+archs="aarch64 aarch64-musl"
+hostmakedepends="bc python python-devel swig dtc uboot-mkimage bison flex"
+makedepends=""
+depends=""
+short_desc="U-Boot for Pine64 boards"
+maintainer="Linux-BSD <sec.research.2005@gmail.com>"
+license="GPL-2.0-or-later"
+homepage="https://github.com/u-boot/u-boot"
+#distfiles="https://github.com/u-boot/u-boot/archive/v${_uboot_version}.tar.gz https://github.com/ARM-software/arm-trusted-firmware/archive/${_atf_commit}.tar.gz"
+distfiles="https://github.com/u-boot/u-boot/archive/v${_uboot_version}.tar.gz https://github.com/ARM-software/arm-trusted-firmware/archive/v${_atf_version}.tar.gz"
+checksum="98584bb07d1605c48ef6f74f7c2b57d00ba0cc2752b3c8215d38432322dbf5bc 7c4c00a4f28d3cfbb235fd1a1fb28c4d2fc1d657c9301686e7d8824ef575d059"
+
+_platform="sun50i_a64"
+_h64_platform="sun50i_h6"
+
+post_extract() {
+	cd u-boot-${_uboot_version}
+  touch include/stddef.h # musl hack
+	patch -Np1 < ${FILESDIR}/0003-Set-board-name-for-Pine64.patch
+  cd ..
+}
+
+do_build() {
+  unset CFLAGS CXXFLAGS LDFLAGS
+  #cd arm-trusted-firmware-${_atf_commit}
+	cd arm-trusted-firmware-${_atf_version}
+	CFLAGS="-fno-stack-protector" make PLAT=${_platform} DEBUG=1 bl31 CROSS_COMPILE=${XBPS_CROSS_TRIPLET}-
+	cp build/${_platform}/debug/bl31.bin ../u-boot-${_uboot_version}
+
+	cd ../u-boot-${_uboot_version}
+	make distclean
+
+	make pine64_plus_defconfig
+  echo 'CONFIG_IDENT_STRING=" Void Linux ARM"' >> .config
+	make EXTRAVERSION=-${version} ARCH=arm CROSS_COMPILE=${XBPS_CROSS_TRIPLET}-
+  cat spl/sunxi-spl.bin u-boot.itb > u-boot-sunxi-with-spl-pine64.bin
+
+	make pine64-lts_defconfig
+  echo 'CONFIG_IDENT_STRING=" Void Linux ARM"' >> .config
+	make EXTRAVERSION=-${version} ARCH=arm CROSS_COMPILE=${XBPS_CROSS_TRIPLET}-
+  cat spl/sunxi-spl.bin u-boot.itb > u-boot-sunxi-with-spl-pine64-lts.bin
+
+	make pinebook_defconfig
+  echo 'CONFIG_IDENT_STRING=" Void Linux ARM"' >> .config
+	make EXTRAVERSION=-${version} ARCH=arm CROSS_COMPILE=${XBPS_CROSS_TRIPLET}-
+  cat spl/sunxi-spl.bin u-boot.itb > u-boot-sunxi-with-spl-pinebook.bin
+
+  make sopine_baseboard_defconfig
+  echo 'CONFIG_IDENT_STRING=" Void Linux ARM"' >> .config
+	make EXTRAVERSION=-${version} ARCH=arm CROSS_COMPILE=${XBPS_CROSS_TRIPLET}-
+  cat spl/sunxi-spl.bin u-boot.itb > u-boot-sunxi-with-spl-sopine.bin
+
+  # pine H64 is based on H6, so we need to build a new ATF
+	cd ../arm-trusted-firmware-${_atf_version}
+	CFLAGS="-fno-stack-protector" make PLAT=${_platform} DEBUG=1 clean CROSS_COMPILE=${XBPS_CROSS_TRIPLET}-
+	CFLAGS="-fno-stack-protector" make PLAT=${_h64_platform} DEBUG=1 bl31 CROSS_COMPILE=${XBPS_CROSS_TRIPLET}-
+	cp build/${_h64_platform}/debug/bl31.bin ../u-boot-${_uboot_version}
+
+	cd ../u-boot-${_uboot_version}
+
+	make pine_h64_defconfig
+  echo 'CONFIG_IDENT_STRING=" Void Linux ARM"' >> .config
+	make EXTRAVERSION=-${version} ARCH=arm CROSS_COMPILE=${XBPS_CROSS_TRIPLET}-
+  cat spl/sunxi-spl.bin u-boot.itb > u-boot-sunxi-with-spl-pine-h64.bin
+
+}
+
+do_install() {
+  vmkdir boot
+	vinstall u-boot-${_uboot_version}/u-boot-sunxi-with-spl-pine64.bin 644 boot
+	vinstall u-boot-${_uboot_version}/u-boot-sunxi-with-spl-pine-h64.bin 644 boot
+	vinstall u-boot-${_uboot_version}/u-boot-sunxi-with-spl-pine64-lts.bin 644 boot
+	vinstall u-boot-${_uboot_version}/u-boot-sunxi-with-spl-pinebook.bin 644 boot
+	vinstall u-boot-${_uboot_version}/u-boot-sunxi-with-spl-sopine.bin 644 boot
+	vinstall ${FILESDIR}/boot.txt 644 boot
+	mkimage -A arm64 -O linux -T script -C none -n "U-Boot boot script" \
+		-d "${DESTDIR}"/boot/boot.txt "${DESTDIR}"/boot/boot.scr
+}
+
