@@ -1,7 +1,7 @@
 # Template file for 'pine64-kernel'
 pkgname=pine64-kernel
 version=5.3.0
-revision=1
+revision=2
 _commit=c1533c70af80ea1cb25348e4931455e932f26af1 # Anarsoul's Fork
 #_commit=eb2138d7bf673dddfd9e5ad6b434623ffd61c751 # Linux-BSD's Fork
 
