@@ -1,14 +1,14 @@
 # Template file for 'pine64-uboot'
 pkgname=pine64-uboot
-version=2019.07
+version=2020.01
 #_atf_commit="19b56cf4a2251e5ffcab41cdd6dd8449f8b1402a"
-_atf_version="2.1"
+_atf_version="2.2"
 #_uboot_version=${version/.rc1/-rc1}
 _uboot_version=${version}
 revision=1
 create_wrksrc=yes
 archs="aarch64 aarch64-musl"
-hostmakedepends="bc python python-devel swig dtc uboot-mkimage bison flex"
+hostmakedepends="bc python3 python3-devel swig dtc uboot-mkimage bison flex"
 makedepends=""
 depends=""
 short_desc="U-Boot for Pine64 boards"
@@ -17,7 +17,7 @@ license="GPL-2.0-or-later"
 homepage="https://github.com/u-boot/u-boot"
 #distfiles="https://github.com/u-boot/u-boot/archive/v${_uboot_version}.tar.gz https://github.com/ARM-software/arm-trusted-firmware/archive/${_atf_commit}.tar.gz"
 distfiles="https://github.com/u-boot/u-boot/archive/v${_uboot_version}.tar.gz https://github.com/ARM-software/arm-trusted-firmware/archive/v${_atf_version}.tar.gz"
-checksum="98584bb07d1605c48ef6f74f7c2b57d00ba0cc2752b3c8215d38432322dbf5bc 7c4c00a4f28d3cfbb235fd1a1fb28c4d2fc1d657c9301686e7d8824ef575d059"
+checksum="e981e02592f7b5386e5bc2b8a076aebc47d90b0ec9ae62be4b76daadc083b3ef 07e3c058ae2d95c7d516a46fc93565b797e912c3271ddbf29df523b1ab1ee911"
 
 _platform="sun50i_a64"
 _h64_platform="sun50i_h6"
