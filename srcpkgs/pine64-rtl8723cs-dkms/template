@@ -1,8 +1,8 @@
 # Template file for 'pine64-rtl8723cs-dkms'
 pkgname=pine64-rtl8723cs-dkms
-version=4.3.23
+version=4.3.24
 revision=1
-_commit="d7db077004f1497800faabb0e6da775391393711"
+_commit="700d05d54f72f3232c17ea1e76c4f4c4649ff8ba"
 
 archs=noarch
 short_desc="Linux driver for Realtek RTL8723CS chip"
@@ -10,15 +10,15 @@ maintainer="Linux-BSD <sec.research.2005@gmail.com>"
 license="GPL-3.0-or-later"
 homepage="https://github.com/Icenowy/rtl8723cs"
 distfiles="${homepage}/archive/${_commit}.tar.gz"
-checksum=38ad98f6e7f711390b3a596360d1a2be56e0f4bea99ea0dd3de1a4d6af535f08
+checksum=cda484b00facac3128c1b43a96d88576e103e5185ad2b19b179177fb67c3a250
 wrksrc="rtl8723cs-${_commit}"
 depends="pine64-dkms"
 
-dkms_modules="rtl8723cs 4.3.23"
+dkms_modules="rtl8723cs 4.3.24"
 
 do_install() {
 	local modname=rtl8723cs
-	local modver=4.3.22
+	local modver=4.3.24
 	local dest=/usr/src/${modname}-${modver}
 
 	vmkdir ${dest}

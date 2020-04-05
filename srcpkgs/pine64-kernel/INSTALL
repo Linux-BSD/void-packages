@@ -1,6 +1,6 @@
 # Generate initramfs
 case "$ACTION" in
 post)
-  /usr/bin/mkinitcpio -n -p linux-5.3
+  /usr/bin/mkinitcpio -n -p linux-5.6
 	;;
 esac

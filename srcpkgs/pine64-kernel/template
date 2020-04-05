@@ -1,20 +1,26 @@
 # Template file for 'pine64-kernel'
 pkgname=pine64-kernel
-version=5.3.0
-revision=3
-_commit=c1533c70af80ea1cb25348e4931455e932f26af1 # Anarsoul's Fork
-#_commit=eb2138d7bf673dddfd9e5ad6b434623ffd61c751 # Linux-BSD's Fork
+version=5.6.2
+revision=1
 
 short_desc="Linux kernel with support for Pine64 boards"
 maintainer="Linux-BSD <sec.research.2005@gmail.com>"
 license="GPL-2.0"
 homepage="http://www.kernel.org"
-distfiles="https://github.com/anarsoul/linux-2.6/archive/${_commit}.tar.gz" # Anarsoul's Fork
+
+# Only for testing
+
+#_commit=c1533c70af80ea1cb25348e4931455e932f26af1 # Anarsoul's Fork
+#distfiles="https://github.com/anarsoul/linux-2.6/archive/${_commit}.tar.gz" # Anarsoul's Fork
+#checksum=ed702f4aaab303d5df0db7dd2d06a19313f401f635bec02523c1edb47a5e32e6   # Anarsoul's Fork
+
+#_commit=eb2138d7bf673dddfd9e5ad6b434623ffd61c751 # Linux-BSD's Fork
 #distfiles="https://github.com/Linux-BSD/linux/archive/${_commit}.tar.gz" # Linux-BSD's Fork
-checksum=ed702f4aaab303d5df0db7dd2d06a19313f401f635bec02523c1edb47a5e32e6   # Anarsoul's Fork
 #checksum=0f46b650ee0195728e951bc99811b6981f46aac5611b6f50f6234d3f9a797193 # Linux-BSD's Fork
 
-
+# Mainline
+distfiles="https://cdn.kernel.org/pub/linux/kernel/v5.x/linux-5.6.2.tar.xz" # Mainline
+checksum=2d4d91d8329c1ed3826c61463650dd4bfbb6ad39dcee6dba4f98a7e94a67b5b9 # Mainline
 
 nodebug=yes
 nostrip=yes
@@ -27,8 +33,9 @@ hostmakedepends="bc elfutils-devel flex gmp-devel kmod libmpc-devel libressl-dev
 makedepends="ncurses-devel"
 depends="mkinitcpio mkinitcpio-udev"
 
-wrksrc="linux-2.6-${_commit}" # Anarsoul's Fork
+#wrksrc="linux-2.6-${_commit}" # Anarsoul's Fork
 #wrksrc="linux-${_commit}" # Linux-BSD's Fork
+wrksrc="linux-${version}" # Mainline
 _kernver="${version}-${revision}-ARCH"
 _karch=arm64
 #triggers="kernel-hooks"
@@ -80,7 +87,7 @@ do_install() {
 
   # For mkinitcpio
   vmkdir etc/mkinitcpio.d
-  vinstall ${FILESDIR}/linux.preset 644 etc/mkinitcpio.d linux-5.3.preset
+  vinstall ${FILESDIR}/linux.preset 644 etc/mkinitcpio.d linux-5.6.preset
 
   vmkdir lib/modules
   make ${makejobs} ${_args} ARCH=${_karch} INSTALL_MOD_PATH=${DESTDIR} modules_install
